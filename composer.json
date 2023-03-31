@@ -1,0 +1,24 @@
+{
+    "name": "magazord-plataforma/aliexpress-sdk-new",
+    "description": "SDK para integração aliexpress na plataforma Magazord com a nova API",
+    "keywords": [
+        "maga",
+        "magazord",
+        "aliexpress",
+        "ali"
+    ],
+    "type": "library",
+    "licence": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Desenvolvimento Magazord",
+            "email": "webmaster@magazord.com.br"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {},
+    "autoload": {
+        "classmap": ["iop/"]
+    },
+    "include-path": ["iop/"]
+}
