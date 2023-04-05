@@ -119,6 +119,7 @@ class IopClient
 		else
 		{
 			$httpStatusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $this->getLog()->setHttpCode($httpStatusCode);
 			curl_close($ch);
 			if (200 !== $httpStatusCode)
 			{
@@ -219,6 +220,7 @@ class IopClient
 		else
 		{
 			$httpStatusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $this->getLog()->setHttpCode($httpStatusCode);
 			curl_close($ch);
 			if (200 !== $httpStatusCode)
 			{
@@ -293,8 +295,6 @@ class IopClient
 		$respObject = json_decode($resp);
 
         // Log
-        $httpStatusCode = curl_getinfo($resp, CURLINFO_HTTP_CODE);
-        $this->getLog()->setHttpCode($httpStatusCode);
         $this->getLog()->setUrl($requestUrl);
         $this->getLog()->setResponseString($resp);
         
