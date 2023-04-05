@@ -17,6 +17,11 @@ class IopClient
 
 	public $logLevel;
 
+    /**
+     * @var MzLogger
+     */
+    protected $log;
+
 	public function getAppkey()
 	{
 		return $this->appkey;
@@ -163,6 +168,7 @@ class IopClient
 
 		$delimiter = '-------------' . uniqid();
 		$data = '';
+        $logString = '';
 		if($postFields != null)
 		{
 			foreach ($postFields as $name => $content) 
@@ -170,9 +176,12 @@ class IopClient
 			    $data .= "--" . $delimiter . "\r\n";
 			    $data .= 'Content-Disposition: form-data; name="' . $name . '"';
 			    $data .= "\r\n\r\n" . $content . "\r\n";
+                $logString .= '[' . $name . '] => ' . $content . PHP_EOL;
 			}
 			unset($name,$content);
 		}
+
+        $this->getLog()->setRequestString($logString);
 
 		if($fileFields != null)
 		{
@@ -282,6 +291,13 @@ class IopClient
 		unset($apiParams);
 
 		$respObject = json_decode($resp);
+
+        // Log
+        $httpStatusCode = curl_getinfo($resp, CURLINFO_HTTP_CODE);
+        $this->getLog()->setHttpCode($httpStatusCode);
+        $this->getLog()->setUrl($requestUrl);
+        $this->getLog()->setResponseString($resp);
+        
 		if(isset($respObject->code) && $respObject->code != "0") 
 		{
 			$this->logApiError($requestUrl, $respObject->code, $respObject->message);
@@ -327,5 +343,14 @@ class IopClient
 	    }
 	    return (substr($haystack, -$length) === $needle);
 	 }
+
+    public function getLog()
+    {
+        if (!$this->log) {
+            require_once('MzLogger.php');
+            $this->log = new MzLogger();
+        }
+        return $this->log;
+    }
 
 }
